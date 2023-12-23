@@ -1,13 +1,10 @@
 package dao.impl;
 
-import dao.DaoFactory;
 import dao.MentorDao;
-import model.Manager;
+import dao.daoUtil.Log;
 import model.Mentor;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class MentorDaoImpl implements MentorDao {
 
@@ -114,10 +111,12 @@ public class MentorDaoImpl implements MentorDao {
             connection = getConnection();
             System.out.println("Connecting succeted");
 
-            String selectById = "SELECT * FROM tb_mentors WHERE id = ?";
+            String readQuery = "SELECT * FROM tb_mentors WHERE id = ?";
 
 
-            preparedStatement = connection.prepareStatement(selectById);
+            preparedStatement = connection.prepareStatement(readQuery);
+            preparedStatement.setLong(1,id);
+
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
 
@@ -133,26 +132,14 @@ public class MentorDaoImpl implements MentorDao {
 
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Log.error(this.getClass().getSimpleName(),e.getStackTrace()[0].getClass().getSimpleName(),e.getMessage());
+            e.printStackTrace();
         }finally {
             close(resultSet);
             close(preparedStatement);
             close(connection);
         }
         return savedMentor;
-
-    }
-
-    private void close(AutoCloseable autoCloseable){
-
-        try {
-            System.out.println(autoCloseable.getClass().getSimpleName() + "closing...");
-            autoCloseable.close();
-            System.out.println(autoCloseable.getClass().getSimpleName() + "closed");
-        } catch (Exception e) {
-            System.out.println("Could not close " + autoCloseable.getClass().getSimpleName());
-            e.printStackTrace();
-        }
 
     }
 

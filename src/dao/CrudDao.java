@@ -18,4 +18,15 @@ public interface CrudDao <Model>{
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    default void close(AutoCloseable autoCloseable){
+        try {
+            System.out.println(autoCloseable.getClass().getSimpleName() + "closing...");
+            autoCloseable.close();
+            System.out.println(autoCloseable.getClass().getSimpleName() + "closed");
+        } catch (Exception e) {
+            System.out.println("Could not close " + autoCloseable.getClass().getSimpleName());
+            e.printStackTrace();
+        }
+    }
+
 }
