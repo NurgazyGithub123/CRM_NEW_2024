@@ -2,10 +2,12 @@ package dao.impl;
 
 import dao.CourseDao;
 import dao.daoUtil.Log;
+import model.Address;
 import model.Course;
 import model.Course;
 
 import java.sql.*;
+import java.util.List;
 
 public class CourseDaoImpl implements CourseDao {
 
@@ -136,6 +138,11 @@ public class CourseDaoImpl implements CourseDao {
 
         }
         return savedCourse;
+    }
+
+    @Override
+    public List<Course> findAll() {
+        return null;
     }
 
 }

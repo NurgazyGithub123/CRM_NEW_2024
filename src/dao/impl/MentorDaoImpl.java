@@ -2,9 +2,12 @@ package dao.impl;
 
 import dao.MentorDao;
 import dao.daoUtil.Log;
+import model.Manager;
 import model.Mentor;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MentorDaoImpl implements MentorDao {
 
@@ -19,7 +22,7 @@ public class MentorDaoImpl implements MentorDao {
             connection = getConnection();
             System.out.println("Connecting succeeted");
 
-            String ddlQuery = "CREATE TABLE tb_mentors(" +
+            String ddlQuery = "CREATE TABLE IF NOT EXISTS tb_mentors(" +
                     "id BIGSERIAL, " +
                     "first_name     VARCHAR(50) NOT NULL, " +
                     "last_name      VARCHAR(50) NOT NULL, " +
@@ -140,7 +143,52 @@ public class MentorDaoImpl implements MentorDao {
             close(connection);
         }
         return savedMentor;
+    }
 
+    @Override
+    public List<Mentor> findAll() {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Mentor> mentors = new ArrayList<>();
+
+
+        try {
+            Log.info(getClass().getSimpleName(), Connection.class.getSimpleName(), "Connection to Database Mentors\n");
+            connection = getConnection();
+
+            String readQuery = "SELECT * FROM tb_mentors";
+
+            preparedStatement = connection.prepareStatement(readQuery);
+            resultSet = preparedStatement.executeQuery();
+
+
+            for (int i = 0; i <= mentors.size() && resultSet.next() ; i++) {
+                Mentor mentor = new Mentor();
+                mentor.setId(resultSet.getLong("id"));
+                mentor.setFirstName(resultSet.getString("first_name"));
+                mentor.setLastName(resultSet.getString("last_name"));
+                mentor.setEmail(resultSet.getString("email"));
+                mentor.setPhoneNumber(resultSet.getString("phone_number"));
+                mentor.setDob(resultSet.getDate("dob").toLocalDate());
+                mentor.setSalary(Double.valueOf(resultSet.getString("salary").replaceAll("[^\\d\\.]+", "")));
+                mentor.setDateCreated(resultSet.getTimestamp("date_created").toLocalDateTime());
+
+                mentors.add(mentor);
+            }
+
+            return mentors;
+
+        } catch (SQLException e) {
+            Log.error(this.getClass().getSimpleName(), e.getStackTrace()[0].getClass().getSimpleName(), e.getMessage());
+            e.printStackTrace();
+        }finally {
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
+        }
+        return null;
     }
 
 }

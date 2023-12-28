@@ -5,6 +5,8 @@ import dao.daoUtil.Log;
 import model.Manager;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ManagerDaoImpl implements ManagerDao {
 
@@ -112,7 +114,7 @@ public class ManagerDaoImpl implements ManagerDao {
             connection = getConnection();
             System.out.println("Connecting succeted");
 
-            String readQuery = "SELECT * FROM tb_mentors WHERE id = ?";
+            String readQuery = "SELECT * FROM tb_managers WHERE id = ?";
 
 
             preparedStatement = connection.prepareStatement(readQuery);
@@ -141,7 +143,52 @@ public class ManagerDaoImpl implements ManagerDao {
             close(connection);
         }
         return savedManager;
-
     }
+
+    @Override
+    public List<Manager> findAll() {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Manager> managers = new ArrayList<>();
+
+        try {
+            Log.error(this.getClass().getSimpleName() + "findAll", Connection.class.getSimpleName(), "Connecting to DataBase");
+            connection = getConnection();
+
+            String readQuery = "SELECT * FROM tb_managers";
+
+            preparedStatement = connection.prepareStatement(readQuery);
+            resultSet = preparedStatement.executeQuery();
+
+
+
+            for (int i = 0; i <= managers.size() && resultSet.next() ; i++) {
+            Manager manager = new Manager();
+            manager.setId(resultSet.getLong("id"));
+            manager.setFirstName(resultSet.getString("first_name"));
+            manager.setLastName(resultSet.getString("last_name"));
+            manager.setEmail(resultSet.getString("email"));
+            manager.setPhoneNumber(resultSet.getString("phone_number"));
+            manager.setDob(resultSet.getDate("dob").toLocalDate());
+            manager.setSalary(Double.valueOf(resultSet.getString("salary").replaceAll("[^\\d\\.]+", "")));
+            manager.setDateCreated(resultSet.getTimestamp("date_created").toLocalDateTime());
+
+            managers.add(manager);
+            }
+            return managers;
+
+        } catch (SQLException e) {
+            Log.error(this.getClass().getSimpleName(),e.getStackTrace()[0].getClass().getSimpleName(),e.getMessage());
+            e.printStackTrace();
+        }finally {
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
+        }
+        return null;
+    }
+
 
 }

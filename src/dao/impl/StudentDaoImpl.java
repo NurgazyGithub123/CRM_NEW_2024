@@ -2,14 +2,12 @@ package dao.impl;
 
 import dao.StudentDao;
 import dao.daoUtil.Log;
-import model.Group;
 import model.Student;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 public class StudentDaoImpl implements StudentDao {
 
@@ -57,6 +55,11 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student findByid(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<Student> findAll() {
         return null;
     }
 }

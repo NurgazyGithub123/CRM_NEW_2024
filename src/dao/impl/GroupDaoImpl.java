@@ -7,6 +7,7 @@ import model.Group;
 
 
 import java.sql.*;
+import java.util.List;
 
 public class GroupDaoImpl implements GroupDao {
 
@@ -110,6 +111,11 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Group findByid(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<Group> findAll() {
         return null;
     }
 }
