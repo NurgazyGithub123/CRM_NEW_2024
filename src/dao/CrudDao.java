@@ -6,13 +6,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public interface CrudDao <Model>{
 
     Model save(Model model);
-    Model findByid(Long id);
+    Optional<Model> findByid(Long id);
 
     List<Model> findAll();
+
+    List<Model> saveAll(List<Model> models);
 
 
     default Connection getConnection() throws SQLException {

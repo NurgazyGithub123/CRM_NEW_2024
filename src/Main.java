@@ -1,25 +1,50 @@
 
 import dao.AddressDao;
-import dao.ManagerDao;
-import dao.MentorDao;
 import dao.daoUtil.DaoFactory;
 import model.Address;
-import model.Manager;
-import model.Mentor;
+import model.builder.AddressBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
+        Address address = AddressBuilder.builder()
+                .country("kgz")
+                .city("Bishkek")
+                .region("uuuuu")
+                .district("qqq")
+                .apartment("cdcdcd")
+                .build();
+
+        Address address1 = AddressBuilder.builder()
+                .country("KZ")
+                .city("Almata")
+                .region("jjjjj")
+                .district("qqq")
+                .apartment("cdcdcd")
+                .build();
+
+        Address address2 = AddressBuilder.builder()
+                .country("UZ")
+                .city("Tashkent")
+                .region("kkkkk")
+                .district("qqq")
+                .apartment("cdcdcd")
+                .build();
+
+        List<Address> addressList = new ArrayList<>();
+        addressList.add(address);
+        addressList.add(address1);
+        addressList.add(address2);
+
         AddressDao addressDao = (AddressDao) DaoFactory.autowired("AddressDao", "singleton");
+        List<Address> savedAddress = addressDao.saveAll(addressList);
 
-        List<Address> addresses = addressDao.findAll();
-        System.out.println(addresses);
+        System.out.println(savedAddress);
 
-        addressDao.findByid(3L);
 
     }
 }

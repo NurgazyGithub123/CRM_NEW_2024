@@ -2,12 +2,11 @@ package dao.impl;
 
 import dao.CourseDao;
 import dao.daoUtil.Log;
-import model.Address;
-import model.Course;
 import model.Course;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Optional;
 
 public class CourseDaoImpl implements CourseDao {
 
@@ -98,7 +97,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public Course findByid(Long id) {
+    public Optional<Course> findByid(Long id) {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -128,6 +127,7 @@ public class CourseDaoImpl implements CourseDao {
             savedCourse.setPriceCourse(Double.valueOf(resultSet.getString("price_course").replaceAll("[^\\d\\.]+", "")));
             savedCourse.setDateCreated(resultSet.getTimestamp("date_created").toLocalDateTime());
 
+            Optional.of(savedCourse);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -137,11 +137,16 @@ public class CourseDaoImpl implements CourseDao {
             close(connection);
 
         }
-        return savedCourse;
+        return Optional.empty();
     }
 
     @Override
     public List<Course> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Course> saveAll(List<Course> courses) {
         return null;
     }
 

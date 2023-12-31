@@ -8,6 +8,7 @@ import model.Mentor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MentorDaoImpl implements MentorDao {
 
@@ -102,7 +103,7 @@ public class MentorDaoImpl implements MentorDao {
     }
 
     @Override
-    public Mentor findByid(Long id) {
+    public Optional<Mentor> findByid(Long id) {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -133,7 +134,7 @@ public class MentorDaoImpl implements MentorDao {
             savedMentor.setSalary(Double.valueOf(resultSet.getString("salary").replaceAll("[^\\d\\.]+", "")));
             savedMentor.setDateCreated(resultSet.getTimestamp("date_created").toLocalDateTime());
 
-
+            Optional.of(savedMentor);
         } catch (SQLException e) {
             Log.error(this.getClass().getSimpleName(),e.getStackTrace()[0].getClass().getSimpleName(),e.getMessage());
             e.printStackTrace();
@@ -142,7 +143,7 @@ public class MentorDaoImpl implements MentorDao {
             close(preparedStatement);
             close(connection);
         }
-        return savedMentor;
+        return Optional.empty();
     }
 
     @Override
@@ -188,6 +189,11 @@ public class MentorDaoImpl implements MentorDao {
             close(preparedStatement);
             close(connection);
         }
+        return null;
+    }
+
+    @Override
+    public List<Mentor> saveAll(List<Mentor> mentors) {
         return null;
     }
 

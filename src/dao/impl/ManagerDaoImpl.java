@@ -7,6 +7,7 @@ import model.Manager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ManagerDaoImpl implements ManagerDao {
 
@@ -102,7 +103,7 @@ public class ManagerDaoImpl implements ManagerDao {
     }
 
     @Override
-    public Manager findByid(Long id) {
+    public Optional<Manager> findByid(Long id) {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -134,6 +135,8 @@ public class ManagerDaoImpl implements ManagerDao {
             savedManager.setDateCreated(resultSet.getTimestamp("date_created").toLocalDateTime());
 
 
+            return Optional.of(savedManager);
+
         } catch (SQLException e) {
             Log.error(this.getClass().getSimpleName(),e.getStackTrace()[0].getClass().getSimpleName(),e.getMessage());
             e.printStackTrace();
@@ -142,7 +145,7 @@ public class ManagerDaoImpl implements ManagerDao {
             close(preparedStatement);
             close(connection);
         }
-        return savedManager;
+        return Optional.empty();
     }
 
     @Override
@@ -187,6 +190,11 @@ public class ManagerDaoImpl implements ManagerDao {
             close(preparedStatement);
             close(connection);
         }
+        return null;
+    }
+
+    @Override
+    public List<Manager> saveAll(List<Manager> managers) {
         return null;
     }
 

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 public class StudentDaoImpl implements StudentDao {
 
@@ -54,12 +55,17 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Student findByid(Long id) {
+    public Optional<Student> findByid(Long id) {
         return null;
     }
 
     @Override
     public List<Student> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Student> saveAll(List<Student> students) {
         return null;
     }
 }
